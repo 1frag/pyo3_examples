@@ -1,0 +1,13 @@
+[package]
+name = "pet_farm"
+version = "0.1.0"
+authors = ["Aleksei Piskunov <piskunov.alesha@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "pet_farm"
+crate-type = ["cdylib"]
+
+[dependencies.pyo3]
+version = "0.13.1"
+features = ["extension-module"]
