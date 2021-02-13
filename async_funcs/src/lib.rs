@@ -4,7 +4,7 @@ use pyo3::class::pyasync::PyAsyncProtocol;
 use pyo3::wrap_pyfunction;
 
 #[pyclass]
-struct _SleepIter {
+struct _Sleep {
     n: i32,
     state: State,
     future: Option<PyObject>,
@@ -18,10 +18,10 @@ enum State {
 }
 
 #[pymethods]
-impl _SleepIter {
+impl _Sleep {
     #[new]
     fn new(n: i32) -> Self {
-        _SleepIter { n, state: State::Initial, future: None }
+        _Sleep { n, state: State::Initial, future: None }
     }
 
     fn _work_for_initial(&mut self) {
@@ -66,8 +66,8 @@ impl _SleepIter {
 }
 
 #[pyproto]
-impl PyIterProtocol for _SleepIter {
-    fn __iter__(slf: PyRefMut<Self>) -> PyResult<Py<_SleepIter>> {
+impl PyIterProtocol for _Sleep {
+    fn __iter__(slf: PyRefMut<Self>) -> PyResult<Py<_Sleep>> {
         Ok(slf.into())
     }
 
@@ -88,23 +88,10 @@ impl PyIterProtocol for _SleepIter {
     }
 }
 
-#[pyclass]
-struct _Sleep {
-    n: i32,
-}
-
-#[pymethods]
-impl _Sleep {
-    #[new]
-    fn new(n: i32) -> Self {
-        _Sleep { n }
-    }
-}
-
 #[pyproto]
 impl PyAsyncProtocol for _Sleep {
-    fn __await__(slf: PyRef<Self>) -> _SleepIter {
-        _SleepIter::new(slf.n)
+    fn __await__(slf: PyRef<Self>) -> _Sleep {
+        _Sleep::new(slf.n)
     }
 }
 
