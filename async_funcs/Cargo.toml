@@ -1,0 +1,13 @@
+[package]
+name = "async_funcs"
+version = "0.1.0"
+authors = ["Aleksei Piskunov <piskunov.alesha@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "async_funcs"
+crate-type = ["cdylib"]
+
+[dependencies.pyo3]
+version = "0.13.1"
+features = ["extension-module"]

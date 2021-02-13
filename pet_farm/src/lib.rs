@@ -1,10 +1,16 @@
 use pyo3::prelude::*;
 
 #[pyclass]
-struct Cat {}
+struct Cat {
+    #[pyo3(get)]
+    name: String,
+}
 
 #[pyclass]
-struct Dog {}
+struct Dog {
+    #[pyo3(get)]
+    name: String,
+}
 
 trait Say {
     fn say(&self) -> String;
@@ -25,8 +31,8 @@ impl Say for Dog {
 #[pymethods]
 impl Cat {
     #[new]
-    fn new() -> Self {
-        Cat {}
+    fn new(name: String) -> Self {
+        Cat { name }
     }
 
     fn say(&self) -> String {
@@ -37,8 +43,8 @@ impl Cat {
 #[pymethods]
 impl Dog {
     #[new]
-    fn new() -> Self {
-        Dog {}
+    fn new(name: String) -> Self {
+        Dog { name }
     }
 
     fn say(&self) -> String {
