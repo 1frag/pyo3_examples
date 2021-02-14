@@ -1,4 +1,4 @@
-from python_to_rust import pet_farm
+from pyo3_examples import pet_farm
 
 
 def test_pet_farm():

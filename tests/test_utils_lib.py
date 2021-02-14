@@ -1,4 +1,4 @@
-from python_to_rust import utils
+from pyo3_examples import utils
 import time
 
 

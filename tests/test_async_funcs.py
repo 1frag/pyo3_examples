@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-from python_to_rust import async_funcs
+from pyo3_examples import async_funcs
 
 
 async def speed_one(lang):

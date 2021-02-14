@@ -1,4 +1,4 @@
-from python_to_rust import hello
+from pyo3_examples import hello
 
 
 def test_hello_world():
