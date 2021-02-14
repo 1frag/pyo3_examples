@@ -1,0 +1,17 @@
+[package]
+name = "decorators"
+version = "0.1.0"
+authors = ["Aleksei Piskunov <piskunov.alesha@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "decorators"
+crate-type = ["cdylib"]
+
+[dependencies.pyo3]
+version = "0.13.1"
+features = ["extension-module"]
+
+[dependencies]
+num-bigint = "0.3.1"
+num-traits = "0.2.14"

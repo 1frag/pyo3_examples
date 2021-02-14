@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "async_funcs",
+    "decorators",
     "hello",
     "pet_farm",
     "utils",
