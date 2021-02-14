@@ -2,6 +2,7 @@
 members = [
     "async_funcs",
     "decorators",
+    "exceptions",
     "hello",
     "pet_farm",
     "utils",

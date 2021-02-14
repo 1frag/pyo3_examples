@@ -11,6 +11,7 @@ setup(
     rust_extensions=[
         RustExtension('pyo3_examples.async_funcs', "async_funcs/Cargo.toml", debug=False),
         RustExtension('pyo3_examples.decorators', "decorators/Cargo.toml", debug=False),
+        RustExtension('pyo3_examples.exceptions', "exceptions/Cargo.toml", debug=False),
         RustExtension('pyo3_examples.hello', "hello/Cargo.toml", debug=False),
         RustExtension('pyo3_examples.pet_farm', "pet_farm/Cargo.toml", debug=False),
         RustExtension('pyo3_examples.utils', "utils/Cargo.toml", debug=False),
