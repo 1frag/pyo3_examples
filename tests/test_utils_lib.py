@@ -37,3 +37,16 @@ def test_fib_iter():
         assert int(ith) == rust_fib(i)
         if i > 150:
             break
+
+
+def test_str_xor():
+    def str_xor(rhs, lhs):
+        return bytes([x ^ y for x, y in zip(rhs, lhs)])
+
+    def check(lhs, rhs):
+        assert str_xor(lhs, rhs) == utils.str_xor(lhs, rhs)
+
+    check(b"hello", b"world")
+    check(b"1234", b"5462")
+    check(b"1234", b"1234")
+    check(b"bytes", b"strings")

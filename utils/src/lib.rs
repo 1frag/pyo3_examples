@@ -1,9 +1,12 @@
 use pyo3::prelude::*;
 use pyo3::class::iter::{IterNextOutput, PyIterProtocol};
+use pyo3::wrap_pyfunction;
+use pyo3::types::PyBytes;
 use num_bigint::BigUint;
 use num_traits::{Zero, One};
 use std::mem::replace;
-use pyo3::wrap_pyfunction;
+use std::convert::TryInto;
+use std::borrow::Borrow;
 
 struct PyBigUint(BigUint);
 
@@ -66,9 +69,22 @@ fn nth_fib(n: usize) -> String {
     format!("{}", f0)
 }
 
+#[pyfunction]
+fn str_xor<'a>(
+    py: Python<'a>,
+    rhs: &'a [u8],
+    lhs: &'a [u8],
+) -> &'a PyBytes {
+    let data = lhs.iter().zip(rhs.iter()).map(|(l, r)| {
+        l ^ r
+    }).collect::<Vec<u8>>();
+    PyBytes::new(py, data.as_slice())
+}
+
 #[pymodule]
 fn utils(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<Fib>()?;
     m.add_function(wrap_pyfunction!(nth_fib, m)?)?;
+    m.add_function(wrap_pyfunction!(str_xor, m)?)?;
     Ok(())
 }
