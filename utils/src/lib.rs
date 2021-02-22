@@ -1,12 +1,13 @@
-use pyo3::prelude::*;
-use pyo3::class::iter::{IterNextOutput, PyIterProtocol};
-use pyo3::wrap_pyfunction;
-use pyo3::types::PyBytes;
+use pyo3::{
+    prelude::*,
+    class::iter::{IterNextOutput, PyIterProtocol},
+    wrap_pyfunction,
+    types::{PyBytes, PyTuple, PyList, PyInt, PyString, PyFloat, PySequence},
+    exceptions::PyAssertionError,
+};
 use num_bigint::BigUint;
 use num_traits::{Zero, One};
 use std::mem::replace;
-use std::convert::TryInto;
-use std::borrow::Borrow;
 
 struct PyBigUint(BigUint);
 
@@ -81,10 +82,65 @@ fn str_xor<'a>(
     PyBytes::new(py, data.as_slice())
 }
 
+fn is_integer_instance(obj: &PyAny) -> bool {
+    obj.is_instance::<PyInt>().unwrap()
+}
+
+fn is_string_instance(obj: &PyAny) -> bool {
+    obj.is_instance::<PyString>().unwrap()
+}
+
+fn is_float_instance(obj: &PyAny) -> bool {
+    obj.is_instance::<PyFloat>().unwrap()
+}
+
+fn obj_to_tuple(obj: &PyAny) -> PyResult<&PyTuple> {
+    let seq = <PySequence as PyTryFrom>::try_from(obj)?;
+    seq.tuple()
+}
+
+#[pyfunction(args = "*", first = true, select = false)]
+fn check_key(
+    args: &PyTuple,
+    first: bool,
+    select: bool,
+) -> PyResult<Vec<&PyAny>> {
+    /* Bind for function at:
+    https://github.com/tarantool/tarantool-python/blob/
+        30b377595872eb03f743ff4f15317bfbca5d4fbb/tarantool/utils.py#L32
+    */
+
+    if select && args.len() == 0 {
+        let v: Vec<&PyAny> = vec![];
+        return Ok(v);
+    }
+    if args.len() == 1 {
+        let args0 = args.get_item(0);
+        if first && (args0.is_instance::<PyList>().unwrap() ||
+            args0.is_instance::<PyTuple>().unwrap()) {
+            let new_args = obj_to_tuple(args0).unwrap();
+            return check_key(new_args, false, select);
+        } else if args0.is_none() && select {
+            let v: Vec<&PyAny> = vec![];
+            return Ok(v);
+        }
+    }
+    if args.iter().filter(|obj| {
+        !is_integer_instance(*obj)
+            && !is_string_instance(*obj)
+            && !is_float_instance(*obj)
+    }).next().is_some() {
+        return Err(PyAssertionError::new_err("arguments should be int, str or float"));
+    }
+
+    Ok(args.iter().collect::<Vec<&PyAny>>())
+}
+
 #[pymodule]
 fn utils(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<Fib>()?;
     m.add_function(wrap_pyfunction!(nth_fib, m)?)?;
     m.add_function(wrap_pyfunction!(str_xor, m)?)?;
+    m.add_function(wrap_pyfunction!(check_key, m)?)?;
     Ok(())
 }

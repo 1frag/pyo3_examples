@@ -13,5 +13,6 @@ num-bigint = "0.3.1"
 num-traits = "0.2.14"
 
 [dependencies.pyo3]
-version = "0.13.1"
+git = "https://github.com/davidhewitt/pyo3/"
+branch = "fix-multiple-kw-only-arg"
 features = ["extension-module"]
