@@ -3,13 +3,14 @@ from setuptools_rust import RustExtension
 
 setup(
     name="pyo3_examples",
-    version="0.1.1",
+    version="0.1.2",
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Rust",
     ],
     rust_extensions=[
         RustExtension('pyo3_examples.async_funcs', "async_funcs/Cargo.toml", debug=False),
+        RustExtension('pyo3_examples.async_sleep', "async_sleep/Cargo.toml", debug=False),
         RustExtension('pyo3_examples.decorators', "decorators/Cargo.toml", debug=False),
         RustExtension('pyo3_examples.exceptions', "exceptions/Cargo.toml", debug=False),
         RustExtension('pyo3_examples.hello', "hello/Cargo.toml", debug=False),
