@@ -1,13 +1,11 @@
-use pyo3::{
-    prelude::*,
-    class::iter::{IterNextOutput, PyIterProtocol},
-    wrap_pyfunction,
-    types::{PyBytes, PyTuple, PyList, PyInt, PyString, PyFloat, PySequence},
-    exceptions::PyAssertionError,
-};
+use pyo3::{prelude::*, class::iter::{IterNextOutput, PyIterProtocol}, wrap_pyfunction,
+           types::{PyBytes, PyTuple, PyList, PyInt, PyString, PyFloat, PySequence},
+           exceptions::PyAssertionError};
 use num_bigint::BigInt;
 use num_traits::{Zero, One};
 use std::mem::replace;
+use std::time::SystemTime;
+use chrono::{DateTime, Utc};
 
 
 #[pyclass]
@@ -123,11 +121,20 @@ fn check_key(
     Ok(args.iter().collect::<Vec<&PyAny>>())
 }
 
+#[pyfunction]
+fn utcnow() -> String {
+    let now = SystemTime::now();
+    let now: DateTime<Utc> = now.into();
+    let now: String = now.to_rfc3339();
+    format!("{}", &now[..26])
+}
+
 #[pymodule]
 fn utils(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<Fib>()?;
     m.add_function(wrap_pyfunction!(nth_fib, m)?)?;
     m.add_function(wrap_pyfunction!(str_xor, m)?)?;
     m.add_function(wrap_pyfunction!(check_key, m)?)?;
+    m.add_function(wrap_pyfunction!(utcnow, m)?)?;
     Ok(())
 }

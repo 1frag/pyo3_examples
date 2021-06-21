@@ -12,3 +12,4 @@ crate-type = ["rlib", "cdylib"]
 pyo3 = { git = "https://github.com/PyO3/pyo3.git", features = ["num-bigint", "extension-module"] }
 num-bigint = "0.4.0"
 num-traits = "0.2.14"
+chrono = "0.4.19"
